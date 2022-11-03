@@ -1,11 +1,11 @@
-1. Docker介绍
+## 1. Docker介绍
 ---先理解几个概念
 （a）CGROUPS：https://zh.wikipedia.org/wiki/Cgroups
 （b）LXC：https://zh.wikipedia.org/wiki/LXC
 （c）AUFS：https://zh.wikipedia.org/wiki/Aufs
 （d）Hypervisor: https://zh.wikipedia.org/wiki/Hypervisor
 
-（1）什么是Docker
+###（1）什么是Docker
 创始人与由来：
 dotCloud: Solomon Hykeys(在法国期间)的公司内部项目
 开始：Ubuntu 12.04上基于Go语言实现，RedHat：RHEL 6.5支持
@@ -33,7 +33,7 @@ aufs（全称：advanced multi-layered unification filesystem，高级多层统�
 
 
 
-（2）Docker的优势
+### （2）Docker的优势
 - 开发：交付和部署快，迁移和扩展方便
 - 运维：资源利用率高，管理简单
 
@@ -55,7 +55,7 @@ aufs（全称：advanced multi-layered unification filesystem，高级多层统�
 ——维护更加简单，基于基础镜像可延伸出扩展镜像。
 ——Docker团队与项目团队维护了大量高质量的官方镜像，可直接使用或定制。
 
-(3) 概念理解
+### (3) 概念理解
 镜像（Image）
 ——操作系统分为内核和用户空间：对于 Linux 而言，内核启动后，会挂载 root 文件系统为其提供用户空间支持。而 Docker 镜像（Image），就相当于是一个 root 文件系统。
 ——Docker 镜像是一个特殊的文件系统，除了提供容器运行时所需的程序、库、资源、配置等文件外，还包含了一些为运行时准备的一些配置参数（如匿名卷、环境变量、用户等）。
@@ -94,7 +94,8 @@ Docker Registry私有服务
 
 
 
-2. 安装Docker
+## 2. 安装Docker
+```
 # 说明-y顺便安装docker依赖的软件包
 yum install -y docker.x86_64
 
@@ -116,16 +117,17 @@ docker ps
 docker images
 #拉取指定名称的镜像
 docker pull <名称>
+```
 
-3. docker镜像
-（1）拉取和删除镜像
+## 3. docker镜像
+### （1）拉取和删除镜像
 docker pull <镜像名称>
 例如：docker pull docker.io/redis
 
 docker rmi <镜像ID>
 例如：docker rmi -f 5004609dd30
 
-（2）查看镜像信息
+### （2）查看镜像信息
 下面命令是查看本地所有已下载的镜像列表：
 docker images
 仓库名/镜像标签信息/镜像ID/创建时间/镜像大小
@@ -133,17 +135,21 @@ docker images
 查看某个镜像的详细信息：
 docker inspect <镜像ID>
 
-（3）搜寻镜像(公有库)
+### （3）搜寻镜像(公有库)
 docker search <镜像名>
 docker search redis
 
-（4）创建镜像
+### （4）创建镜像
 
 1）基于已有的镜像容器创建
+```
 docker commit -a <作者> -m <提交信息> --pause=true
+```
 
 例如：
+```
 docker commit -a "test" -m "new images" c189b5f44060 testimage
+```
 
 test是作者
 new images是提交信息
@@ -152,73 +158,98 @@ testimage是镜像的名称
 
 
 2）可基于本地模板导入进行构建镜像：
+```
 sudo cat <tar.gz> | docker import - <name>:<tag> https://openvz.org/Download/template/precreated
 
-例如：cat debian-7.0-x86_64.tar.gz | docker import - tommy:debianbase
+# 例如：
+cat debian-7.0-x86_64.tar.gz | docker import - tommy:debianbase
 
 debian-7.0-x86_64.tar.gz是下载的镜像模板
-
+```
 
 3）使用dockerfile配置
 
 
-（5）存出和载入镜像（可快速备份和恢复）
-存出镜像：docker save -o **.tar <name>:<tag>
+### （5）存出和载入镜像（可快速备份和恢复）
+存出镜像：
+```
+docker save -o **.tar <name>:<tag>
+```
 (将现有的镜像打成tar包)
+```
 **.tar代表输出的镜像文件
+```
 
 将本地docker镜像文件保存成本地文件
 
-载入镜像：docker load --input / < **.tar
-
+载入镜像：
+```
+docker load --input / < **.tar
+```
 将本地的镜像文件载入到docker镜像
 
-
-（6）上传镜像(https://hub.docker.com)
+### （6）上传镜像(https://hub.docker.com)
+```
 docker images
 docker login
 docker tag <ID> <acountname>/<imageName>:<tag>
 docker push <accountName>/<imageName>:<tag>
+```
 
-
-（7）运行镜像
+### （7）运行镜像
 docker run -it <镜像id> /bin/bash
 
-4. 容器和仓库
+## 4. 容器和仓库
 (1)创建容器/启动容器
+```
 #创建容器
 docker create -it <name>:<tag>
 #启动已经创建的容器
 docker start <ID>
 # 新建容器并启动容器
 docker run -it <ID> /bin/bash
-
+```
+```
 # 守护态运行
 docker run -d <ID> /bin/sh -c 'while true;do echo hello world;sleep 1;done'
 docker ps
 # 查看前端打印的日志
 docker logs <容器ID>
+```
 
+```
 #查看已启动的容器实例
 docker ps
+```
 
 (2)终止容器
+```
 docker stop <ID>
+```
 
 (3)进入容器
+```
 docker exec -it <ID> /bin/bash
+```
 
 (4)删除容器(-f强制删除的意思)
+```
 docker rm -f <ID>
+```
 
 (5)导入和载出容器
 （作用：快速备份当前容器和恢复当前容器）
 导入容器：
+```
 cat **.tar | docker import - <name>:<tag>
+```
 导出容器：
+```
 docker export <ID> > **.tar
+```
 
 (6)搭建私有仓库
+```
 # 拉取注册服务镜像
 docker pull registry
 
@@ -228,36 +259,47 @@ docker pull registry
 docker run -d -v /opt/registry:/var/lib/registry -p 5000:5000 --restart=always --name registry registry:latest
 
 http://ip:5000/v2/_catalog
+```
 
-5. 数据卷
+## 5. 数据卷
 (1)数据卷
+```
 docker run -v <host DIR>:<container DIR> <name> <command>
 
 docker run -d -P --name web -v /webapp:training/web -v /images:training/images python appy
+```
 
 (2)数据卷容器
 借助数据卷容器来供其他容器共享。
-
+```
 docker run -it -v /dbdata --name dbdata ubuntu
+```
 
 (3)利用数据卷容器迁移数据
 备份：将数据卷容器打包至宿主机
+```
 docker run --volume-from dbdata -v $(pwd):/backup --name worker tar cvf /backup/backup.tar /dbdata
+```
 
 恢复：将宿主机上的数据卷容器备份进行恢复
+```
 docker run -v /dbdata --name dbdata2 ubuntu /bin/bash
 
 docker run --volume-from dbdata2 -v2/_catalog $(pwd):/backup busybox tar xvf /backup/backup.tar
+```
 
-
-6. 网络配置
+## 6. 网络配置
 （1）访问容器
 -P 随机端口
+```
 docker run -d -P training/webapp python app.py
-
+```
 -p 指定端口
+```
 docker run -d -p 5000:5000 --name web training/webapp python app.py
-
+```
 
 （2）映射端口配置查看
+```
 docker port
+```
