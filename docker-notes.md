@@ -1,37 +1,52 @@
 ## 1. Docker介绍
-- 先理解几个概念
+先理解几个概念
+```
 （a）CGROUPS：https://zh.wikipedia.org/wiki/Cgroups <br/>
 （b）LXC：https://zh.wikipedia.org/wiki/LXC <br/>
 （c）AUFS：https://zh.wikipedia.org/wiki/Aufs <br/>
 （d）Hypervisor: https://zh.wikipedia.org/wiki/Hypervisor <br/>
+```
 
-###（1）什么是Docker
-创始人与由来： <br/>
-dotCloud: Solomon Hykeys(在法国期间)的公司内部项目 <br/>
-开始：Ubuntu 12.04上基于Go语言实现，RedHat：RHEL 6.5支持 <br/>
-2013/3: Apache授权协议开源，GitHub上维护，加入了Linux基金会（开放容器联盟OCI） <br/>
-2013年底：dotCloud改名docker <br/>
+### （1）什么是Docker
+创始人与由来： 
+```
+dotCloud: Solomon Hykeys(在法国期间)的公司内部项目
+开始：Ubuntu 12.04上基于Go语言实现，RedHat：RHEL 6.5支持
+2013/3: Apache授权协议开源，GitHub上维护，加入了Linux基金会（开放容器联盟OCI）
+2013年底：dotCloud改名docker
+```
 
 原理：
-（1）go语言实现 <br/>
-（2）基于Linux内核的cgroup, namespace, AUFS类的Union FS等主要技术对进程封装隔离 <br/>
-（3）容器：属于操作系统层面的虚拟化技术，隔离的进程独立于宿主和其他的隔离进程。容器内可运行应用程序，不同的容器之间相互隔离，容器之间可相互通信 <br/>
+```
+（1）go语言实现.
+（2）基于Linux内核的cgroup, namespace, AUFS类的Union FS等主要技术对进程封装隔离.
+（3）容器：属于操作系统层面的虚拟化技术，隔离的进程独立于宿主和其他的隔离进程。容器内可运行应用程序，不同的容器之间相互隔离，容器之间可相互通信.
+```
 
-cgroup技术： <br/>
-名称源自控制组群（control groups）的简写，是Linux内核的一个功能，用来限制，控制与分离一个进程组群的资源（如CPU、内存、磁盘输入输出等）。在Linux内核中，提供了cgroups功能，来达成资源的区隔化。 <br/>
+cgroup技术：
+```
+名称源自控制组群（control groups）的简写，是Linux内核的一个功能，用来限制，控制与分离一个进程组群的资源（如CPU、内存、磁盘输入输出等）。在Linux内核中，提供了cgroups功能，来达成资源的区隔化。 
+```
 
-namespace名称空间技术： <br/>
+namespace名称空间技术： 
+```
 名称空间技术使应用程序看到的操作系统环境被区隔成独立区间，包括进程树，网络，用户id，以及挂载的文件系统。 <br/>
+```
 
-AUFS类的UnionFS技术（分层存储技术）： <br/>
-aufs（全称：advanced multi-layered unification filesystem，高级多层统一文件系统）用于为Linux文件系统实现联合挂载。由多层文件系统联合组成。 <br/>
-该技术使得构建镜像时，可一层层构建，前一层是后一层的基础。当前层删除前一层的文件时，实际上不是真的删除，而是仅在当前层标记该文件已删除。 <br/>
-容器运行时，虽然不会看不见此文件，但实际上该文件一直跟随镜像。主要用来实现容器的存储层。 <br/>
+AUFS类的UnionFS技术（分层存储技术）： 
+```
+aufs（全称：advanced multi-layered unification filesystem，高级多层统一文件系统）用于为Linux文件系统实现联合挂载。由多层文件系统联合组成。 
+该技术使得构建镜像时，可一层层构建，前一层是后一层的基础。当前层删除前一层的文件时，实际上不是真的删除，而是仅在当前层标记该文件已删除。 
+容器运行时，虽然不会看不见此文件，但实际上该文件一直跟随镜像。主要用来实现容器的存储层。 
+```
 
 
-初始版本：实现基于LXC（Linux 软件容器，提供了cgroup与namespace等技术功能） <br/>
-0.7版本：该版本后去除LXC，转而使用自行开发libcontainer <br/>
-1.11版本：进一步演进为使用runc和containerd <br/>
+初始版本,实现基于LXC（Linux 软件容器，提供了cgroup与namespace等技术功能） 
+
+0.7版本：该版本后去除LXC，转而使用自行开发libcontainer 
+
+1.11版本：进一步演进为使用runc和containerd
+
 
 
 
